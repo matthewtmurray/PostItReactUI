@@ -12,6 +12,11 @@ function Comments() {
       var comment = input;
         addComment(comments => [...comments, comment]);
     }
+
+    const removeComment = (e)=>{
+        let comment = e.target.dataset.message;
+        addComment(comments.filter((e)=>(e !== comment)))
+    }
     
   return (
    
@@ -21,7 +26,7 @@ function Comments() {
         <button type="button" className="btn btn-primary" onClick={update}>Add comment</button>
 
         <div id="commentsDiv">{comments.map((comment, i)=>(
-            <Comment message={comment} key={i}></Comment>
+            <Comment message={comment} key={i} removeComment={removeComment}></Comment>
         ))}</div>.
 
         

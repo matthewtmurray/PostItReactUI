@@ -1,29 +1,34 @@
 
 import React, { useState } from 'react';
 import Picture from './picture';
-import ConvertImage from './imageHandler';
 
 
 function Pictures() {
 
     var [pictures, addPicture] = useState([]);
-    const [input, setInput] = useState('');
 
-    const update = ()=>{
-      var picture = input;
-      addPicture(pictures => [...pictures, picture]);
-    }
+    const fileInput = React.createRef();
 
     const convertImage = ()=>{
-        var picture = ConvertImage(input);
-        addPicture(pictures => [...pictures, picture]);
+
+      if (fileInput.current.files && fileInput.current.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = imageIsLoaded;
+        reader.readAsDataURL(fileInput.current.files[0]);
+      }
+     
     }
+  
+  const imageIsLoaded  = (e)=>{
+    addPicture(pictures => [...pictures, e.target.result]);
+  }
     
   return (
    
     <div>
         <h2>Add picture here</h2>
-        <input type="file" id="pictureInput" value={input} onInput={e => setInput(e.target.value)}></input>
+        <input type="file" id="pictureInput"  ref={fileInput}></input>
         <button type="button" className="btn btn-primary" onClick={convertImage}>Add picture</button>
 
         <div id="commentsDiv">{pictures.map((picture, i)=>(
