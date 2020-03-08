@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import Comments from './comments'
+import Pictures from './pictures'
 
 function App() {
   return (
     <div className="App">
       
-      <Comments/>
+      <Pictures/>
     </div>
   );
 }
