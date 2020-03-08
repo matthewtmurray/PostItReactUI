@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Picture from './picture';
+import $ from 'jquery';
 
 
 function Pictures() {
@@ -19,10 +20,51 @@ function Pictures() {
       }
      
     }
+
+    useEffect(() => {
+      $.ajax({
+        type:"GET",
+        url:"http://localhost:9000",
+        dataType: "json",
+        success: function(posts){
+            var picturesArray = [];
+            posts.forEach(p => {
+              picturesArray.push(p.image);
+            });
+            addPicture(picturesArray);
+          },
+        failure: function(error){alert(error)}
+      })
+   }, []);
   
   const imageIsLoaded  = (e)=>{
     addPicture(pictures => [...pictures, e.target.result]);
+    addPostToDb(e.target.result);
   }
+
+  const addPostToDb = (image)=>{
+    
+    var body = {
+        username: "Jack",
+        image: image,
+        imageTitle: "",
+        imageDescritpion:"",
+        comments:[],
+        likes:0,
+        dislikes:0
+    };
+    $.ajax({
+      type:"POST",
+      url:"http://localhost:9000",
+      data: JSON.stringify(body),
+      contentType: "application/json",
+      dataType: "json",
+      success: function(post){
+          alert("saved ok")
+        },
+      failure: function(error){alert(error)}
+    });
+}
     
   return (
    
