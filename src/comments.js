@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import Comment from './comment'
+import Comment from './comment';
+import moment from 'moment';
 
 
 function Comments() {
@@ -9,7 +10,7 @@ function Comments() {
     const [input, setInput] = useState('');
 
     const update = ()=>{
-      var comment = input;
+      var comment = input + " " + moment().format('DD-MM-YYYY hh:mm:ss');
         addComment(comments => [...comments, comment]);
     }
 

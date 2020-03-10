@@ -38,7 +38,7 @@ function Pictures() {
    }, []);
   
   const imageIsLoaded  = (e)=>{
-    addPicture(pictures => [...pictures, e.target.result]);
+    addPicture(pictures => [e.target.result, ...pictures]);
     addPostToDb(e.target.result);
   }
 
@@ -60,7 +60,7 @@ function Pictures() {
       contentType: "application/json",
       dataType: "json",
       success: function(post){
-          alert("saved ok")
+          
         },
       failure: function(error){alert(error)}
     });
