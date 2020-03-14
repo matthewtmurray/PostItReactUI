@@ -2,22 +2,42 @@
 import React, { useState } from 'react';
 import Comment from './comment';
 import moment from 'moment';
+import $ from 'jquery';
 
 
-function Comments() {
+function Comments(props) {
 
     var [comments, addComment] = useState([]);
     const [input, setInput] = useState('');
 
     const update = ()=>{
-      var comment = input + " " + moment().format('DD-MM-YYYY hh:mm:ss');
-        addComment(comments => [...comments, comment]);
+        addCommentToDb(input);
     }
 
     const removeComment = (e)=>{
         let comment = e.target.dataset.message;
         addComment(comments.filter((e)=>(e !== comment)))
     }
+
+    const addCommentToDb = (comment)=>{
+    
+      var body = {
+          comment: comment,
+          postId: props.postId,
+          userName: 'Jack'
+      };
+      $.ajax({
+        type:"POST",
+        url:"http://localhost:9000/comment",
+        data: JSON.stringify(body),
+        contentType: "application/json",
+        dataType: "json",
+        success: function(comment){
+          addComment(comments => [...comments, {comment:comment.comment, id:comment.id, dateTime:comment.dateTime}]);
+          },
+        failure: function(error){alert(error)}
+      });
+  }
     
   return (
    

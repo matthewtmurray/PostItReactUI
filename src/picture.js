@@ -7,7 +7,7 @@ function Picture(props) {
     <div>
     <img src={props.image} alt="a p=nice picure"/>
     <div className="commentsDiv">
-        <Comments/>
+        <Comments postId={props.postId}/>
     </div>
     </div>
   );

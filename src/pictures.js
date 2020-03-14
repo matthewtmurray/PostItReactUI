@@ -29,7 +29,7 @@ function Pictures() {
         success: function(posts){
             var picturesArray = [];
             posts.forEach(p => {
-              picturesArray.push(p.image);
+              picturesArray.push({image: p.image, id: p._id});
             });
             addPicture(picturesArray);
           },
@@ -38,7 +38,7 @@ function Pictures() {
    }, []);
   
   const imageIsLoaded  = (e)=>{
-    addPicture(pictures => [e.target.result, ...pictures]);
+    
     addPostToDb(e.target.result);
   }
 
@@ -60,7 +60,7 @@ function Pictures() {
       contentType: "application/json",
       dataType: "json",
       success: function(post){
-          
+        addPicture(pictures => [{image: post.image, id: post._id}, ...pictures]);
         },
       failure: function(error){alert(error)}
     });
@@ -74,7 +74,7 @@ function Pictures() {
         <button type="button" className="btn btn-primary" onClick={convertImage}>Add picture</button>
 
         <div id="commentsDiv">{pictures.map((picture, i)=>(
-            <Picture image={picture} key={i}></Picture>
+            <Picture image={picture.image} postId={picture.id} key={i}></Picture>
         ))}</div>.
 
         
