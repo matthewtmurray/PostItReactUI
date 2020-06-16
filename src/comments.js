@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Comment from './comment';
 import moment from 'moment';
 import $ from 'jquery';
@@ -15,9 +15,25 @@ function Comments(props) {
     }
 
     const removeComment = (e)=>{
-        let comment = e.target.dataset.message;
-        addComment(comments.filter((e)=>(e !== comment)))
+        let id = e.target.dataset.id;
+        addComment(comments.filter((e)=>(e.id !== id)));
     }
+
+    useEffect(() => {
+      $.ajax({
+        type:"GET",
+        url:"http://localhost:9000/comments?postId=" + props.postId,
+        dataType: "json",
+        success: function(comments){
+            var commentsArray = [];
+            comments.forEach(comment => {
+              commentsArray.push(comment);
+            });
+            addComment(commentsArray);
+          },
+        failure: function(error){alert(error)}
+      })
+   }, []);
 
     const addCommentToDb = (comment)=>{
     
@@ -33,7 +49,7 @@ function Comments(props) {
         contentType: "application/json",
         dataType: "json",
         success: function(comment){
-          addComment(comments => [...comments, {comment:comment.comment, id:comment.id, dateTime:comment.dateTime}]);
+          addComment(comments => [...comments, {comment:comment.comment, id:comment.id, dateTime:comment.dateTime, userName: comment.userName, postId: comment.postId}]);
           },
         failure: function(error){alert(error)}
       });
@@ -47,7 +63,7 @@ function Comments(props) {
         <button type="button" className="btn btn-primary" onClick={update}>Add comment</button>
 
         <div id="commentsDiv">{comments.map((comment, i)=>(
-            <Comment message={comment} key={i} removeComment={removeComment}></Comment>
+            <Comment message={comment.comment} key={i} entity={comment} removeComment={removeComment}></Comment>
         ))}</div>.
 
         
